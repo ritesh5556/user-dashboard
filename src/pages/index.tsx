@@ -103,16 +103,16 @@ function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-sm">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      <nav className="bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-            <h1 className="text-xl font-semibold">User Dashboard</h1>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">User Dashboard</h1>
             <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
-              <span className="text-gray-600 text-sm sm:text-base">Welcome, {currentUser?.email}</span>
+              <span className="text-slate-600 text-sm sm:text-base font-medium">Welcome, {currentUser?.email}</span>
               <button
                 onClick={handleLogout}
-                className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 w-full sm:w-auto"
+                className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-full hover:from-rose-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-200 w-full sm:w-auto font-medium shadow-md hover:shadow-lg"
               >
                 Logout
               </button>
@@ -121,28 +121,31 @@ function Dashboard() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="py-6">
           {error && (
-            <div className="mb-4 bg-red-50 p-4 rounded-md">
-              <p className="text-sm text-red-700">{error}</p>
+            <div className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-md">
+              <p className="text-sm text-red-700 font-medium">{error}</p>
             </div>
           )}
 
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
-            <h2 className="text-2xl font-bold text-gray-900">Manage Users</h2>
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-8 space-y-4 sm:space-y-0">
+            <h2 className="text-3xl font-bold text-slate-800">Manage Users</h2>
             <button
               onClick={() => setIsFormVisible(true)}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 w-full sm:w-auto"
+              className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-6 py-2.5 rounded-full hover:from-blue-600 hover:to-indigo-600 transform hover:scale-105 transition-all duration-200 w-full sm:w-auto font-medium shadow-md hover:shadow-lg flex items-center justify-center space-x-2"
               disabled={loading}
             >
-              Add New User
+              <span>Add New User</span>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+              </svg>
             </button>
           </div>
 
           {(isFormVisible || editingUser) && (
-            <div className="mb-8 bg-white shadow rounded-lg p-4 sm:p-6">
-              <h3 className="text-lg font-semibold mb-4">
+            <div className="mb-8 bg-white shadow-lg rounded-2xl p-6 border border-slate-100">
+              <h3 className="text-xl font-bold text-slate-800 mb-6">
                 {editingUser ? 'Edit User' : 'Create New User'}
               </h3>
               <UserForm
@@ -155,7 +158,7 @@ function Dashboard() {
                   setIsFormVisible(false);
                   setEditingUser(null);
                 }}
-                className="mt-4 text-gray-600 hover:text-gray-900 w-full sm:w-auto"
+                className="mt-4 text-slate-500 hover:text-slate-700 font-medium transition-colors duration-200 w-full sm:w-auto"
               >
                 Cancel
               </button>
@@ -164,26 +167,28 @@ function Dashboard() {
 
           {loading ? (
             <div className="flex justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
             </div>
           ) : (
-            <div className="bg-white shadow rounded-lg divide-y divide-gray-200">
-              {users.map((user) => (
-                <div key={user.id} className="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0">
+            <div className="bg-white shadow-lg rounded-2xl border border-slate-100">
+              {users.map((user, index) => (
+                <div key={user.id} className={`p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0 ${
+                  index !== users.length - 1 ? 'border-b border-slate-100' : ''
+                }`}>
                   <div>
-                    <h4 className="text-lg font-medium text-gray-900">{user.name}</h4>
-                    <p className="text-sm text-gray-500">{user.email}</p>
+                    <h4 className="text-lg font-semibold text-slate-800">{user.name}</h4>
+                    <p className="text-slate-500 mt-1">{user.email}</p>
                   </div>
                   <div className="flex space-x-4 w-full sm:w-auto justify-end">
                     <button
                       onClick={() => setEditingUser(user)}
-                      className="text-indigo-600 hover:text-indigo-900 px-3 py-1"
+                      className="text-blue-600 hover:text-blue-800 font-medium px-4 py-2 rounded-full hover:bg-blue-50 transition-colors duration-200"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDeleteUser(user.id)}
-                      className="text-red-600 hover:text-red-900 px-3 py-1"
+                      className="text-rose-600 hover:text-rose-800 font-medium px-4 py-2 rounded-full hover:bg-rose-50 transition-colors duration-200"
                     >
                       Delete
                     </button>
@@ -191,8 +196,9 @@ function Dashboard() {
                 </div>
               ))}
               {users.length === 0 && !loading && (
-                <div className="p-6 text-center text-gray-500">
-                  No users found. Click "Add New User" to create one.
+                <div className="p-8 text-center">
+                  <p className="text-slate-500 text-lg">No users found.</p>
+                  <p className="text-slate-400 mt-1">Click "Add New User" to create one.</p>
                 </div>
               )}
             </div>
