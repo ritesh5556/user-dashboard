@@ -1,36 +1,186 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js User Dashboard with TypeScript and Tailwind
+
+A full-stack application featuring a user management dashboard built with Next.js, TypeScript, and Tailwind CSS, containerized with Docker.
+
+## Features
+
+- User management dashboard with CRUD operations
+- Responsive design using Tailwind CSS
+- Type-safe development with TypeScript
+- Containerized deployment with Docker
+- Integration with Google Cloud Functions and Firestore
+- Authentication with Firebase Auth
+
+## Prerequisites
+
+- Node.js 18 or later
+- Docker
+- Google Cloud Platform account (for deployment)
+- Firebase project
+
+## Environment Variables
+
+Create a `.env.local` file with the following variables:
+
+```bash
+# Firebase Configuration
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+
+# API Configuration
+NEXT_PUBLIC_API_URL=your_cloud_functions_url
+```
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd nextjs-app
+   ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up Firebase:
+   - Create a new Firebase project
+   - Enable Authentication and Firestore
+   - Add your Firebase configuration to `.env.local`
+   - Deploy Cloud Functions (see below)
+
+4. Run the development server:
+   ```bash
+   npm run dev
+   ```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Deploying Cloud Functions
+
+1. Install Firebase CLI:
+   ```bash
+   npm install -g firebase-tools
+   ```
+
+2. Login to Firebase:
+   ```bash
+   firebase login
+   ```
+
+3. Initialize Firebase in the functions directory:
+   ```bash
+   cd functions
+   firebase init functions
+   ```
+
+4. Deploy functions:
+   ```bash
+   firebase deploy --only functions
+   ```
+
+## Docker Deployment
+
+1. Build the Docker image:
+   ```bash
+   docker build -t nextjs-dashboard .
+   ```
+
+2. Run the container:
+   ```bash
+   docker run -p 3000:3000 nextjs-dashboard
+   ```
+
+## API Documentation
+
+### Authentication
+
+All API endpoints require Firebase Authentication. Include the Firebase ID token in the Authorization header:
+```
+Authorization: Bearer <firebase_id_token>
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Endpoints
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+#### GET /users
+- Returns a list of all users
+- Response: `User[]`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+#### GET /users/:id
+- Returns a specific user by ID
+- Response: `User`
 
-## Learn More
+#### POST /users
+- Creates a new user
+- Request body: `UserInput`
+- Response: `User`
 
-To learn more about Next.js, take a look at the following resources:
+#### PUT /users/:id
+- Updates an existing user
+- Request body: `UserInput`
+- Response: `User`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### DELETE /users/:id
+- Deletes a user
+- Response: `void`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Types
 
-## Deploy on Vercel
+```typescript
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+interface UserInput {
+  name: string;
+  email: string;
+}
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Project Structure
+
+```
+.
+├── src/
+│   ├── components/    # React components
+│   │   ├── UserForm.tsx
+│   │   ├── UserList.tsx
+│   │   └── ProtectedRoute.tsx
+│   ├── contexts/      # React contexts
+│   │   └── AuthContext.tsx
+│   ├── pages/         # Next.js pages
+│   │   ├── _app.tsx
+│   │   ├── index.tsx
+│   │   └── login.tsx
+│   ├── services/      # API services
+│   │   └── api.ts
+│   ├── styles/        # Global styles
+│   └── types/         # TypeScript types
+├── functions/         # Cloud Functions
+│   └── src/
+│       └── index.ts
+├── public/           # Static assets
+├── Dockerfile        # Docker configuration
+└── README.md        # Project documentation
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+
+This project is licensed under the MIT License.
